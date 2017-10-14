@@ -2,12 +2,12 @@
 //https://www.youtube.com/watch?v=rVfjZrqoQ7o&index=1&list=LLQTRzuLImAUu4afOyN_jnaw
 
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const client = new Discord.Client({autoReconnect:true});
 const token = require('./settings.json').token;
-var stayinAlive = client({autoReconnect:true});
 client.on('ready',() => {
-  console.log('I\'m Online\nI\'m Online');
+  console.log('I\'m Online!\nI\'m Online!');
 });
+function isNaN(value){ return Number.isNaN(Number(value)); }
 
 var prefix = "bot<<";
 client.on('message', message =>{
@@ -21,8 +21,20 @@ client.on('message', message =>{
   else if(message.content.startsWith(prefix + 'pong')){
     message.channel.send('ping');
   }
-  else if(message.content.startsWith(prefix + 'send')){
-    client.channels.get('352601996643008516').send('Hello World!');
+  else if(message.content.startsWith(prefix + 'help')){
+    var help = "Hello World! I'm the bot for ACM-SEMO!\n"+
+                   "(Use the prefix bot<< to call upon me)\n"+
+                   "Here's some things I can do:\n"+
+                   "event - tell when the next upcoming event is\n"+
+                   "ping/pong - cause I love me some ping pong\n"+
+                   "binary - convert decimal numbers to binary\n"+
+                   "hex - convert decimal numbers to hexadecimal\n"+
+                   "bhex - convert binary numbers to hexadecimal";
+    message.channel.send(help);
+  }
+  else if(message.content.startsWith(prefix + 'sendEvent')){
+    var eventTime = getNextEvent(argresult);
+    client.channels.get('352601996643008516').send(eventTime);
   }
   else if(message.content.startsWith(prefix + 'setgame')){
     if(!argresult) argresult = null;
@@ -33,18 +45,47 @@ client.on('message', message =>{
     client.user.setStatus(argresult);
   }
   else if(message.content.startsWith(prefix + 'event')){
-    var eventTime = getNextEvent();
+    if(!argresult) argresult = null;
+    var eventTime = getNextEvent(argresult);
     message.channel.send(eventTime);
+  }
+  else if(message.content.startsWith(prefix + 'brackets')){
+    //call upon a function that checks for even/odd brackets in code
+  }
+  else if(message.content.startsWith(prefix + 'humor')){
+    //grab a page from the programmerhumor subreddit
+  }
+  else if(message.content.startsWith(prefix + 'binary')){
+    var num = toBinary(argresult);
+    message.reply(num);
+  }
+  else if(message.content.startsWith(prefix + 'hex')){
+    var num = toHex(argresult);
+    message.reply(num);
+  }
+  else if(message.content.startsWith(prefix + 'bhex')){
+    var num = binToHex(argresult);
+    message.reply(num);
   }
 });
 
-function getNextEvent(){
+/*
+client.on('serverNewMember', (x,y)=>{
+  if(x === client.servers.get('id',"SERVERID")){
+    client.sendMessage(x.channels.get('name','general'),"Welcome to the ACM-SEMO Discord, " + y.mention() + "!");
+  }
+});
+*/
+
+function getNextEvent(info){
   var currentDate = new Date().getMonth();
   if((currentDate === 12) || (currentDate > 5 && currentDate < 8)){
     return "I can't find a date that's currently scheduled...";
   }
   else{
-    var currentEvent = "The next event is ";
+    var currentEvent;
+    if(info != null) currentEvent = "The event " + info + " will take place ";
+    else currentEvent = "The next event is ";
     if(Date.today().is().monday() === 1) currentEvent += "today at 6:30pm!";
     else{
       var eventDate = Date.parse("next monday");
@@ -55,12 +96,24 @@ function getNextEvent(){
   }
 }
 
+function toBinary(n){
+  if(!isNaN(n)) return (+n).toString(2);
+  else return "Something doesn't seem right...";
+}
+
+function toHex(n){
+  if(!isNaN(n)) return ((+n).toString(16)).toUpperCase();
+  else return "Something doesn't seem right...";
+}
+
+function binToHex(n){
+  if(!isNaN(n)) return (parseInt(+n, 2).toString(16)).toUpperCase();
+  else return "Something doesn't seem right...";
+}
+
 client.login(token);
 
-
-
-
-/*------------date.js library is below, will trim out what's not needed eventually--------------*/
+/*------------date.js is below, will trim out what's not needed eventually--------------*/
 
 Date.CultureInfo={name:"en-US",englishName:"English (United States)",nativeName:"English (United States)",dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],abbreviatedDayNames:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],shortestDayNames:["Su","Mo","Tu","We","Th","Fr","Sa"],firstLetterDayNames:["S","M","T","W","T","F","S"],monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],abbreviatedMonthNames:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],amDesignator:"AM",pmDesignator:"PM",firstDayOfWeek:0,twoDigitYearMax:2029,dateElementOrder:"mdy",formatPatterns:{shortDate:"M/d/yyyy",longDate:"dddd, MMMM dd, yyyy",shortTime:"h:mm tt",longTime:"h:mm:ss tt",fullDateTime:"dddd, MMMM dd, yyyy h:mm:ss tt",sortableDateTime:"yyyy-MM-ddTHH:mm:ss",universalSortableDateTime:"yyyy-MM-dd HH:mm:ssZ",rfc1123:"ddd, dd MMM yyyy HH:mm:ss GMT",monthDay:"MMMM dd",yearMonth:"MMMM, yyyy"},regexPatterns:{jan:/^jan(uary)?/i,feb:/^feb(ruary)?/i,mar:/^mar(ch)?/i,apr:/^apr(il)?/i,may:/^may/i,jun:/^jun(e)?/i,jul:/^jul(y)?/i,aug:/^aug(ust)?/i,sep:/^sep(t(ember)?)?/i,oct:/^oct(ober)?/i,nov:/^nov(ember)?/i,dec:/^dec(ember)?/i,sun:/^su(n(day)?)?/i,mon:/^mo(n(day)?)?/i,tue:/^tu(e(s(day)?)?)?/i,wed:/^we(d(nesday)?)?/i,thu:/^th(u(r(s(day)?)?)?)?/i,fri:/^fr(i(day)?)?/i,sat:/^sa(t(urday)?)?/i,future:/^next/i,past:/^last|past|prev(ious)?/i,add:/^(\+|after|from)/i,subtract:/^(\-|before|ago)/i,yesterday:/^yesterday/i,today:/^t(oday)?/i,tomorrow:/^tomorrow/i,now:/^n(ow)?/i,millisecond:/^ms|milli(second)?s?/i,second:/^sec(ond)?s?/i,minute:/^min(ute)?s?/i,hour:/^h(ou)?rs?/i,week:/^w(ee)?k/i,month:/^m(o(nth)?s?)?/i,day:/^d(ays?)?/i,year:/^y((ea)?rs?)?/i,shortMeridian:/^(a|p)/i,longMeridian:/^(a\.?m?\.?|p\.?m?\.?)/i,timezone:/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\s*(\+|\-)\s*\d\d\d\d?)|gmt)/i,ordinalSuffix:/^\s*(st|nd|rd|th)/i,timeContext:/^\s*(\:|a|p)/i},abbreviatedTimeZoneStandard:{GMT:"-000",EST:"-0400",CST:"-0500",MST:"-0600",PST:"-0700"},abbreviatedTimeZoneDST:{GMT:"-000",EDT:"-0500",CDT:"-0600",MDT:"-0700",PDT:"-0800"}};
 Date.getMonthNumberFromName=function(name){var n=Date.CultureInfo.monthNames,m=Date.CultureInfo.abbreviatedMonthNames,s=name.toLowerCase();for(var i=0;i<n.length;i++){if(n[i].toLowerCase()==s||m[i].toLowerCase()==s){return i;}}
