@@ -7,6 +7,7 @@ const token = require('./settings.json').token;
 
 client.on('ready',() => {
 	console.log('I\'m Online!\nI\'m Online!');
+	setInterval(checkDay(),86400000);
 });
 
 function isNaN(value){
@@ -95,30 +96,32 @@ client.on('serverNewMember', (x,y)=>{
 });
 */
 
+function checkDay(){
+	var now = new Date().getDate();
+	if(now == 1) getEventJSON();
+}
+
 function getEventJSON(){
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET','https://acmsemo.github.io/js/events-min.json',true);
-	xhr.send();
-	xhr.onreadystatechange = jFunc;
-	function jFunc(e){
-		if(xhr.readyState == 4 && xhr.status == 200){
-			document.open();
-			var json = JSON.parse(xhr.responseText);
-			var currentYear = new Date().getFullYear();
-			var currentMonth = new Date().getMonth() + 1;
-			currentYear = currentYear.toString();
-			var yearEvents = json[currentYear];
-			/*
-			for(var i = 1; i < 13; i++){
-				if(i in yearEvents){
-					var monthEvents = yearEvents[i];
+	var currentMonth = parseInt(new Date().getMonth()+1);
+	if(currentMonth < 6 || currentMonth > 7){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','https://acmsemo.github.io/js/events-min.json',true);
+		xhr.send();
+		xhr.onreadystatechange = jFunc;
+		
+		function jFunc(e){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var json = JSON.parse(xhr.responseText);
+				var currentYear = (new Date().getFullYear()).toString();
+				if(currentMonth in json[currentYear]){
+					var monthEvents = json[currentYear][currentMonth];
+					var message = "List of events for this month:\n";
 					for(var j = 0; j < monthEvents.length; j++){
-						document.write(monthEvents[j]["event"] + "<br/>");
+						message += monthEvents[j][""] + ": " + monthEvents[j]["event"] + "\n";
 					}
+					client.channels.get('352601996643008516').send(message);
 				}
 			}
-			document.close();
-			*/
 		}
 	}
 }
