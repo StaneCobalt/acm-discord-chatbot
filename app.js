@@ -95,6 +95,34 @@ client.on('serverNewMember', (x,y)=>{
 });
 */
 
+function getEventJSON(){
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET','https://acmsemo.github.io/js/events-min.json',true);
+	xhr.send();
+	xhr.onreadystatechange = jFunc;
+	function jFunc(e){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			document.open();
+			var json = JSON.parse(xhr.responseText);
+			var currentYear = new Date().getFullYear();
+			var currentMonth = new Date().getMonth() + 1;
+			currentYear = currentYear.toString();
+			var yearEvents = json[currentYear];
+			/*
+			for(var i = 1; i < 13; i++){
+				if(i in yearEvents){
+					var monthEvents = yearEvents[i];
+					for(var j = 0; j < monthEvents.length; j++){
+						document.write(monthEvents[j]["event"] + "<br/>");
+					}
+				}
+			}
+			document.close();
+			*/
+		}
+	}
+}
+
 function getNextEvent(info){
 	var date = require("datejs");
 	var currentDate = new Date().getMonth();
