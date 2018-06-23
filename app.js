@@ -7,7 +7,7 @@ const token = require('./settings.json').token;
 
 client.on('ready',() => {
 	console.log('I\'m Online!\nI\'m Online!');
-	setInterval(checkDay(),86400000);
+	setInterval(function(){checkDay()},86400000);
 });
 
 function isNaN(value){
