@@ -12,8 +12,9 @@ This is a bot for the ACM-SEMO organization's Discord channel.
 
 ### Packages used
 - Discord.js https://discord.js.org/#/
-- datejs http://www.datejs.com/
+- Datejs http://www.datejs.com/
 - request https://github.com/request/request
+- XMLHttpRequest https://www.w3schools.com/xml/xml_http.asp
 
 ### Tutorial
 #### Setting up a Discord Bot on Raspbian
@@ -60,6 +61,8 @@ In my case I also installed these dependencies.
 `npm install datejs`
 
 `npm install request`
+
+`npm install xmlhttprequest`
 
 Copy in your app.js, and settings.json files and you're good to go!
 Use `node app.js` to start running your bot.

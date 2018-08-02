@@ -40,7 +40,11 @@ client.on('message', message =>{
 	}else if(message.content.startsWith(prefix + 'sendEvent')){
 		var eventTime = getNextEvent(argresult);
 		client.channels.get('352601996643008516').send(eventTime);
-	}else if(message.content.startsWith(prefix + 'setgame')){
+	}
+	else if(message.content.startsWith(prefix+'sudoEvent')){
+		getEventJSON(true);
+	}
+	else if(message.content.startsWith(prefix + 'setgame')){
 		if(!argresult) argresult = null;
 		client.user.setGame(argresult);
 	}else if(message.content.startsWith(prefix + 'setstatus')){
@@ -98,12 +102,13 @@ client.on('serverNewMember', (x,y)=>{
 
 function checkDay(){
 	var now = new Date().getDate();
-	if(now == 1) getEventJSON();
+	if(now == 1) getEventJSON(false);
 }
 
-function getEventJSON(){
+function getEventJSON(forced){
 	var currentMonth = parseInt(new Date().getMonth()+1);
 	if(currentMonth < 6 || currentMonth > 7){
+		var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET','https://acmsemo.github.io/js/events-min.json',true);
 		xhr.send();
@@ -117,10 +122,14 @@ function getEventJSON(){
 					var monthEvents = json[currentYear][currentMonth];
 					var message = "List of events for this month:\n";
 					for(var j = 0; j < monthEvents.length; j++){
-						message += monthEvents[j][""] + ": " + monthEvents[j]["event"] + "\n";
+						message += monthEvents[j]["day"] + ": " + monthEvents[j]["event"] + "\n";
 					}
-					client.channels.get('352601996643008516').send(message);
+					//if(forced == true) client.channels.get('368617325902954518').send(message);
+					//else
+						client.channels.get('352601996643008516').send(message);
 				}
+			} else {
+				printNo();
 			}
 		}
 	}
@@ -129,7 +138,7 @@ function getEventJSON(){
 function getNextEvent(info){
 	var date = require("datejs");
 	var currentDate = new Date().getMonth();
-	if((currentDate === 12) || (currentDate > 5 && currentDate < 8)){
+	if(currentDate === 12 || currentDate === 6 || currentDate === 7){
 		return "I can't find a date that's currently scheduled...";
 	}else{
 		var currentEvent;
@@ -158,6 +167,33 @@ function toHex(n){
 function binToHex(n){
 	if(!isNaN(n)) return (parseInt(+n, 2).toString(16)).toUpperCase();
 	else return "Something doesn't seem right...";
+}
+
+function printNo(){
+	var n = Math.floor(Math.random() * 6);
+	switch(n){
+		case 0:
+			console.log("No.");
+			break;
+		case 1:
+			console.log("Nope.");
+			break;
+		case 2:
+			console.log("Nuh uh.");
+			break;
+		case 3:
+			console.log("I am the master of my own will!");
+			break;
+		case 4:
+			console.log("Don't feel like it.");
+			break;
+		case 5:
+			console.log("I'm sorry, but I can't let you do that.");
+			break;
+		default:
+			console.log("Why?");
+			break;
+	}
 }
 
 client.login(token);
