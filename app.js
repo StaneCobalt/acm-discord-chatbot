@@ -5,6 +5,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client({autoReconnect:true});
 const token = require('./settings.json').token;
 
+var startTime = "7:00 pm";
+
 client.on('ready',() => {
 	console.log('I\'m Online!\nI\'m Online!');
 	setInterval(function(){checkDay()},86400000);
@@ -144,11 +146,11 @@ function getNextEvent(info){
 		var currentEvent;
 		if(info != null) currentEvent = "The event " + info + " will take place ";
 		else currentEvent = "The next event is ";
-		if(Date.today().is().monday() === 1) currentEvent += "today at 5:30pm!";
+		if(Date.today().is().monday() === 1) currentEvent += "today at " + startTime + "!";
 		else{
 			var eventDate = Date.parse("next monday");
 			var stringDate = eventDate.toString("MMM-d-yyyy");
-			currentEvent += "Monday " + stringDate + " at 5:30pm!";
+			currentEvent += "Monday " + stringDate + " at " + startTime + "!";
 		}
 		return currentEvent;
 	}
