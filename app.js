@@ -54,8 +54,12 @@ client.on('message', message =>{
 		client.user.setStatus(argresult);
 	}else if(message.content.startsWith(prefix + 'event')){
 		if(!argresult) argresult = null;
-		var eventTime = getNextEvent(argresult);
+		//let eventTime = getNextEvent(argresult);
+		getNextEventJSON(message);
+		/*if(!eventTime)
+			eventTime = "I can't seem to find an event...";
 		message.channel.send(eventTime);
+		*/
 	}else if(message.content.startsWith(prefix + 'meme')){
 		//grab a page from the programmerhumor subreddit
 		var request = require('request');
@@ -103,7 +107,7 @@ client.on('serverNewMember', (x,y)=>{
 */
 
 function checkDay(){
-	var now = new Date().getDate();
+	var now = parseInt(new Date().getDate());
 	if(now == 1) getEventJSON(false);
 }
 
@@ -123,7 +127,7 @@ function getEventJSON(forced){
 				if(currentMonth in json[currentYear]){
 					var monthEvents = json[currentYear][currentMonth];
 					var message = "List of events for this month:\n";
-					for(var j = 0; j < monthEvents.length; j++){
+					for(let j = 0; j < monthEvents.length; j++){
 						message += monthEvents[j]["day"] + ": " + monthEvents[j]["event"] + "\n";
 					}
 					//if(forced == true) client.channels.get('368617325902954518').send(message);
@@ -131,28 +135,103 @@ function getEventJSON(forced){
 						client.channels.get('352601996643008516').send(message);
 				}
 			} else {
-				printNo();
+				printNo(null);
 			}
 		}
 	}
 }
 
+function getNextEventJSON(msg){
+	var thinkingBoutIt = false;
+	var currentMonth = parseInt(new Date().getMonth()+1);
+	if(currentMonth < 6 || currentMonth > 7){
+		var message;
+		thinkingBoutIt = true;
+		var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET','https://acmsemo.github.io/js/events-min.json',true);
+		xhr.send();
+		xhr.onreadystatechange = jFunc;
+		
+		function waitALittleWhile(){
+			if(thinkingBoutIt){
+				setTimeout(function(){waitALittleWhile()},100);
+			} else {
+				if(message === "" || !message){
+					console.log("waiting...");
+					msg.channel.send("It seems I can't find my event list...");
+				} else {
+					msg.channel.send(message.toString());
+				}
+			}
+		}
+		
+		function jFunc(e){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var date = require("datejs");
+				var json = JSON.parse(xhr.responseText);
+				var currentYear = (new Date().getFullYear()).toString();
+				if(currentMonth in json[currentYear]){
+					var monthEvents = json[currentYear][currentMonth];
+					if(Date.today().is().monday() == 1){
+						console.log("trying to today");
+						var thisDay = Date.today();
+						//check if there's an event today
+						for(let i = 0; i < monthEvents.length; i++){
+							if(monthEvents[i]["day"] == thisDay){
+								message = "The next event is today: " + monthEvents[i]["event"];
+								break;
+							}
+						}
+					}
+					if(!message){
+						console.log("trying next event");
+						//if no event today, search for the next event
+						for(let i = 0; i < monthEvents.length; i++){
+							if(monthEvents[i]["day"] > thisDay){
+								message = "The next event is on " + currentMonth + "/" + monthEvents[i]["day"] + ": " + monthEvents[i]["event"];
+								break;
+							}
+						}
+					}
+				}
+				if(!message && currentMonth != 12){
+					console.log("trying next month");
+					//no events found this month, check for first event in next month
+					var nextMonth = parseInt(new Date().getMonth()+2);
+					if(nextMonth in json[currentYear]){
+						let nextEvent = json[currentYear][nextMonth][0];
+						message = "The next event is on " + (nextEvent["day"]).toString() + ": " + (nextEvent["event"]).toString();
+					}
+				}
+				thinkingBoutIt = false;
+				waitALittleWhile();
+			}
+		}
+		
+	}
+}
+
 function getNextEvent(info){
 	var date = require("datejs");
-	var currentDate = new Date().getMonth();
-	if(currentDate === 12 || currentDate === 6 || currentDate === 7){
-		return "I can't find a date that's currently scheduled...";
-	}else{
-		var currentEvent;
-		if(info != null) currentEvent = "The event " + info + " will take place ";
-		else currentEvent = "The next event is ";
-		if(Date.today().is().monday() === 1) currentEvent += "today at " + startTime + "!";
-		else{
-			var eventDate = Date.parse("next monday");
-			var stringDate = eventDate.toString("MMM-d-yyyy");
-			currentEvent += "Monday " + stringDate + " at " + startTime + "!";
+	var response = "";
+	try {	
+		if(info) {
+			response = "The event " + info + " will take place ";
+		} else {
+			response = "The next event is ";
 		}
-		return currentEvent;
+		if(Date.today().is().monday() == 1) {
+			response += "today at " + startTime + "!";
+		} else {
+			let eventDate = Date.parse("next monday");
+			let stringDate = eventDate.toString("MMM-d-yyyy");
+			response += "Monday " + stringDate + " at " + startTime + "!";
+		}
+		return response;
+	}
+	catch(err){
+		printNo(err);
 	}
 }
 
@@ -171,7 +250,9 @@ function binToHex(n){
 	else return "Something doesn't seem right...";
 }
 
-function printNo(){
+function printNo(err){
+	if(err != null)
+		console.log(err.toString());
 	var n = Math.floor(Math.random() * 6);
 	switch(n){
 		case 0:
