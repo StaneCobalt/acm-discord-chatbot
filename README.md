@@ -1,7 +1,7 @@
 # ACM-SEMO Discord Bot
 This is a bot for the ACM-SEMO organization's Discord channel.
 
-<img src="https://github.com/StaneCobalt/acm-discord-chatbot/blob/master/acmsemo-discord-logo.png" width="50%" />
+<img src="https://github.com/StaneCobalt/acm-discord-chatbot/blob/master/images/acmsemo-discord-logo.png" width="50%" />
 
 ### Current functionality
 - Display date for next upcoming event
@@ -19,6 +19,8 @@ This is a bot for the ACM-SEMO organization's Discord channel.
 ### Tutorial
 #### Setting up a Discord Bot on Raspbian
 This tutorial assumes you've already built a bot and you're now transferring it onto a new Raspberry Pi.
+
+<img src="https://github.com/StaneCobalt/acm-discord-chatbot/blob/master/images/botHome.JPG" width="50%" />
 
 1. Make sure everything is up to date.
 
