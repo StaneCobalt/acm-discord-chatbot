@@ -173,12 +173,13 @@ function getNextEventJSON(msg){
 				var currentYear = (new Date().getFullYear()).toString();
 				if(currentMonth in json[currentYear]){
 					var monthEvents = json[currentYear][currentMonth];
+					var thisDay = parseInt(new Date().getDate());
+					console.log("today is: " + thisDay);
 					if(Date.today().is().monday() == 1){
-						console.log("trying to today");
-						var thisDay = Date.today();
+						console.log("trying today");
 						//check if there's an event today
 						for(let i = 0; i < monthEvents.length; i++){
-							if(monthEvents[i]["day"] == thisDay){
+							if(parseInt(monthEvents[i]["day"]) == thisDay){
 								message = "The next event is today: " + monthEvents[i]["event"];
 								break;
 							}
@@ -188,7 +189,7 @@ function getNextEventJSON(msg){
 						console.log("trying next event");
 						//if no event today, search for the next event
 						for(let i = 0; i < monthEvents.length; i++){
-							if(monthEvents[i]["day"] > thisDay){
+							if(parseInt(monthEvents[i]["day"]) > thisDay){
 								message = "The next event is on " + currentMonth + "/" + monthEvents[i]["day"] + ": " + monthEvents[i]["event"];
 								break;
 							}
@@ -201,7 +202,7 @@ function getNextEventJSON(msg){
 					var nextMonth = parseInt(new Date().getMonth()+2);
 					if(nextMonth in json[currentYear]){
 						let nextEvent = json[currentYear][nextMonth][0];
-						message = "The next event is on " + (nextEvent["day"]).toString() + ": " + (nextEvent["event"]).toString();
+						message = "The next event is on " + nextMonth.toString() + "/" + (nextEvent["day"]).toString() + ": " + (nextEvent["event"]).toString();
 					}
 				}
 				thinkingBoutIt = false;
