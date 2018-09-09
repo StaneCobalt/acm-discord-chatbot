@@ -1,3 +1,7 @@
+[![Generic badge](https://img.shields.io/badge/Chat-Discord-8080ff.svg)](https://discordapp.com/invite/Bhs2zGp)
+[![Generic badge](https://img.shields.io/badge/Made%20with-Discord.js-8080ff.svg)](https://discord.js.org/#/)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+
 # ACM-SEMO Discord Bot
 This is a bot for the ACM-SEMO organization's Discord channel.
 
