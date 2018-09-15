@@ -1,4 +1,4 @@
-https://discordapp.com/api/guilds/285603678885511170/widget.png?style=shield
+![Discord Shield](https://discordapp.com/api/guilds/285603678885511170/widget.png?style=shield)
 [![Generic badge](https://img.shields.io/badge/Made%20with-Discord.js-8080ff.svg)](https://discord.js.org/#/)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
