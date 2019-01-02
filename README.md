@@ -5,24 +5,25 @@
 # ACM-SEMO Discord Bot
 This is a bot for the ACM-SEMO organization's Discord channel.
 
-<img src="https://github.com/StaneCobalt/acm-discord-chatbot/blob/master/images/acmsemo-discord-logo.png" width="50%" />
+<img src="images/acmsemo-discord-logo.png" alt="acm-semo bot" width="50%" />
 
-### Current functionality
+## Bot Functionality
 - Display date for next upcoming event
 - Convert Decimal to Binary
 - Convert Binary to Hex
 - Convert Decimal to Hex
-- Fetch top 3 posts from the programmerhumor subreddit
+- Fetch the top 3 hottest posts from the programmerhumor subreddit
 
-### Packages used
+## Packages
 - Discord.js https://discord.js.org/#/
 - Datejs http://www.datejs.com/
 - request https://github.com/request/request
 - XMLHttpRequest https://www.w3schools.com/xml/xml_http.asp
 
-### Tutorial
+
+## Tutorial
 #### Setting up a Discord Bot on Raspbian
-This tutorial assumes you've already built a bot and you're now transferring it onto a new Raspberry Pi.
+> This tutorial assumes you've already built a bot and you're now transferring it onto a new Raspberry Pi.
 
 <img src="https://github.com/StaneCobalt/acm-discord-chatbot/blob/master/images/botHome.JPG" width="50%" />
 
